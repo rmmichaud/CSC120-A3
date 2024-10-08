@@ -5,6 +5,7 @@
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 class Conversation {
@@ -14,7 +15,18 @@ class Conversation {
     List<String> transcript = new ArrayList<>();
     Random rand = new Random();
     Scanner scanner = new Scanner(System.in);
-
+    String[] response = {
+      "Mhmm.",
+      "Sounds interesting.",
+      "Wow!",
+      "Interesting! Tell me more.",
+      "How are you feeling about this?",
+      "I see.",
+      "It makes you think, doesn't it?",
+      "I've never thought about it like that.",
+      "Now that's a thought!",
+      "It's one of those things, you know?"
+    };
     String output1 = "How many rounds? ";
     // add output1 to transcript list, print first interaction and read input  
     transcript.add(output1);
@@ -35,38 +47,57 @@ class Conversation {
       /** replace various personal pronounds with a temporary variable, then replace those temp variables with the final word
        * not all words needed temporary variables, some could be directly replaced
        */
-      round = round.replace ("your", "TEMP1");
-      round = round.replace ("Your", "TEMP2");
-      round = round.replace (" I ", " TEMP3 ");
-      round = round.replace ("me", "TEMP4");
-      round = round.replace ("Me", "TEMP5");
-      round = round.replace ("you", "TEMP6");
-      round = round.replace ("You", "TEMP6");
-      round = round.replace("I ", "TEMP7 ");
-      round = round.replace(" you", " TEMP8");
-      round = round.replace ("my", "TEMP9");
-      round = round.replace ("My", "TEMP10");
-      round = round.replace (" am ", " TEMP11 ");
-      round = round.replace(" am", " TEMP11");
-
-      round = round.replace ("TEMP1", "my");
-      round = round.replace ("TEMP2", "My");
-      round = round.replace ("TEMP3", "you");
-      round = round.replace ("TEMP4", "you");
-      round = round.replace ("TEMP5", "You");
-      round = round.replace ("TEMP6", "I");
-      round = round.replace("TEMP7", "You ");
-      round = round.replace("TEMP8", " me");
-      round = round.replace ("TEMP9", "your");
-      round = round.replace ("TEMP10", "Your");
-      round = round.replace("TEMP11", "are");
-
+      String[] parts = round.split(" ");
+      for (int i = 0; i < parts.length; i++) {
+        if (parts[i].equals("your")) {
+          parts[i] = parts[i].replace("your", "my");
+          continue;
+        }
+        if (parts[i].equals("Your")) {
+          parts[i] = parts[i].replace ("Your", "My");
+          continue;
+        }
+        if (parts[i].equals("I")) {
+          if (i == 0) {
+            parts[i] = parts[i].replace ("I", "You");
+          } else {
+            parts[i] = parts[i].replace ("I", "you");
+          }
+          continue;
+        }
+        if (parts[i].equals("me")) {
+          parts[i] = parts[i].replace ("me", "you");
+          continue;
+        }
+        if (parts[i].equals("Me")) {
+          parts[i] = parts[i].replace ("Me", "You");
+          continue;
+        }
+        if (parts[i].equals("you") || parts[i].equals("You")) {
+          parts[i] = parts[i].replace ("you", "I");
+          parts[i] = parts[i].replace ("You", "I");
+          continue;
+        }
+        if (parts[i].equals("my")) {
+          parts[i] = parts[i].replace ("my", "your");
+          continue;
+        }
+        if (parts[i].equals("My")) {
+          parts[i] = parts[i].replace ("My", "Your");
+          continue;
+        }
+        if (parts[i].equals("am")) {
+          parts[i] = parts[i].replace ("am", "are");
+          continue;
+        }
+      }
+      round = String.join(" ", parts);
       // fixing grammar inconsistencies created by replacing the personal pronouns*
       round = round.replace("I are", "I am");
       round = round.replace("are I", "am I");
       round = round.replace("Are I", "Am I");
 
-      if (round != roundOriginal) {
+      if (roundOriginal.contains(round) == false) {
         // replaces punctuation, turns mirrored input into a question
         round = round.replace (".", "?");
         round = round.replace ("!", "?");
@@ -79,23 +110,9 @@ class Conversation {
         round = scanner.nextLine();
         roundOriginal = round;
         transcript.add(round);
-      }
-
-        else {
+      } else {
           // if no mirrored input, return a random response
           int rand_int = rand.nextInt(10);
-          String[] response = {
-            "Mhmm.",
-            "Sounds interesting.",
-            "Wow!",
-            "Interesting! Tell me more.",
-            "How are you feeling about this?",
-            "I see.",
-            "It makes you think, doesn't it?",
-            "I've never thought about it like that.",
-            "Now that's a thought!",
-            "It's one of those things, you know?"
-          };
           // add response to transcript, get new input, add to transcript
           String finalResponse = response[rand_int];
           transcript.add(finalResponse);
@@ -114,11 +131,11 @@ class Conversation {
         for(int i = 0; i < transcript.size(); i++) {
           System.out.println(transcript.get(i));
           
-        }
+      }
         break;
       } 
       counter += 1;
     }
     scanner.close();  
-    }
   }
+}
