@@ -44,9 +44,7 @@ class Conversation {
     transcript.add(round);
     int counter = 1;
     while (counter <= numRounds) {
-      /** replace various personal pronounds with a temporary variable, then replace those temp variables with the final word
-       * not all words needed temporary variables, some could be directly replaced
-       */
+      /** replace various personal pronounds with correct mirrored terms **/
       String[] parts = round.split(" ");
       for (int i = 0; i < parts.length; i++) {
         if (parts[i].equals("your")) {
